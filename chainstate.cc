@@ -35,6 +35,8 @@ int main(int argc, char **argv)
     unsigned char script_type;
     string old_value;
 
+    string address_type;
+
     bool ret;
 
     options.create_if_missing = false;
@@ -286,6 +288,8 @@ int main(int argc, char **argv)
             case 0x00:
                 assert(value.size() == 20);
                 addr = get_addr(current_prefix.pubkey_prefix, current_prefix.pubkey_prefix_size, value);
+                address_type = "P2PKH";
+
                 if (dump) {
                     cout << "DUP HASH160 " << value.size() << " " << addr << " EQUALVERIFY CHECKSIG" << endl; // P2PKH
                 }
@@ -294,6 +298,7 @@ int main(int argc, char **argv)
             case 0x01:
                 assert(value.size() == 20);
                 addr = get_addr(current_prefix.script_prefix, current_prefix.script_prefix_size, value);
+                address_type = "P2SH";
 
                 if (dump) {
                     cout << "HASH160 " << value.size() << " " << addr << " EQUAL" << endl; // P2SH
@@ -304,6 +309,7 @@ int main(int argc, char **argv)
             case 0x03:
                 assert(value.size() == 32);
                 addr = get_addr(current_prefix.pubkey_prefix, current_prefix.pubkey_prefix_size, str_to_ripesha(old_value));
+                address_type = "P2PK";
 
                 if (dump) {
                     cout << "PUSHDATA(33) " << addr << " CHECKSIG" << endl; // P2PK
@@ -315,6 +321,7 @@ int main(int argc, char **argv)
                 memset(pub, 0, PUBLIC_KEY_SIZE);
                 pubkey_decompress(script_type, value.c_str(), (unsigned char*) &pub, &publen);
                 addr = get_addr(current_prefix.pubkey_prefix, current_prefix.pubkey_prefix_size, str_to_ripesha(string((const char*)pub, PUBLIC_KEY_SIZE)));
+                address_type = "P2PK";
 
                 if (dump) {
                     cout << "PUSHDATA(65) " << addr << " CHECKSIG" << endl; // P2PK
@@ -325,6 +332,7 @@ int main(int argc, char **argv)
             case 0x28:
                 // P2WPKH / P2WSH
                 addr = rebuild_bech32(value);
+                address_type = addr.length() > 60 ? "P2WSH" : "P2WPKH";
 
                 if (addr == string()) {
                     cout << "Invalid segwit ?" << endl;
@@ -346,7 +354,7 @@ int main(int argc, char **argv)
         }
 
         if (addr != string()) {
-            cout << string_to_hex(tx) << ";" << txn << ";" << addr << ";" << amount << endl;
+            cout << string_to_hex(tx) << ";" << txn << ";" << addr << ";" << amount << ";" << address_type << endl;
         } else {
             cout << string_to_hex(tx) << ";Invalid address or lost;" << amount << endl;
         }
