@@ -1,6 +1,10 @@
 CPP=g++
-CPPFLAGS=-Wall -I. -Ilibbase58 -Isecp256k1/include -Ibech32/ref/c
-LDFLAGS=-Lsecp256k1/.libs -lsecp256k1 -lcrypto -lleveldb -Llibbase58/.libs -lbase58 -Lbech32/ref/c -lbech32
+CPPFLAGSWARN=-pedantic -Wall -Wextra -Wold-style-cast -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align \
+			-Wconversion -Wshadow -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default \
+			-Wswitch-enum -Wundef -Wlogical-op -Winline
+
+CPPFLAGS=-Wall -Wextra $(CPPFLAGSWARN) -I. -Ilibbase58 -Isecp256k1/include -Ibech32/ref/c -I/opt/homebrew/opt/leveldb/include -I/opt/homebrew/opt/openssl@3/include -std=c++0x
+LDFLAGS=-Lsecp256k1/.libs -lsecp256k1 -L/opt/homebrew/opt/openssl@3/lib -lcrypto -L/opt/homebrew/opt/leveldb/lib -lleveldb -Llibbase58/.libs -lbase58 -Lbech32/ref/c -lbech32
 SRCS=chainstate.cc hex.cc varint.cc pubkey.cc
 OBJS=$(SRCS:.cc=.o)
 BINARY=chainstate
