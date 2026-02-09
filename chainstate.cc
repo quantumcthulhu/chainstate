@@ -327,8 +327,8 @@ int main(int argc, char **argv)
                 addr = rebuild_bech32(value);
 
                 if (addr == string()) {
-                    cout << "Invalid segwit ?" << endl;
-                    cout << "TX: " << string_to_hex(tx) << endl;
+                    cerr << "Invalid segwit ?" << endl;
+                    cerr << "TX: " << string_to_hex(tx) << endl;
                 }
 
                 if (dump) {
@@ -356,8 +356,8 @@ int main(int argc, char **argv)
                 addr = rebuild_bech32(value);
 
                 if (addr == string()) {
-                    cout << "Invalid segwit ?" << endl;
-                    cout << "TX: " << string_to_hex(tx) << endl;
+                    cerr << "Invalid segwit ?" << endl;
+                    cerr << "TX: " << string_to_hex(tx) << endl;
                 }
 
                 if (dump) {
