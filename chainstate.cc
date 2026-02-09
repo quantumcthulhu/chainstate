@@ -337,6 +337,35 @@ int main(int argc, char **argv)
 
                 break;
 
+            case 0x51:
+            case 0x52:
+            case 0x53:
+            case 0x54:
+            case 0x55:
+            case 0x56:
+            case 0x57:
+            case 0x58:
+            case 0x59:
+            case 0x5a:
+            case 0x5b:
+            case 0x5c:
+            case 0x5d:
+            case 0x5e:
+            case 0x5f:
+                // Taproot and future witness versions (versions 1-15)
+                addr = rebuild_bech32(value);
+
+                if (addr == string()) {
+                    cout << "Invalid segwit ?" << endl;
+                    cout << "TX: " << string_to_hex(tx) << endl;
+                }
+
+                if (dump) {
+                    cout << "Taproot/Witness v" << (int)(script_type - 0x50) << " " << addr << endl;
+                }
+
+                break;
+
             default:
                 cerr << "Invalid output: " << string_to_hex(tx) << " " << string_to_hex(old_value) << " " << amount << endl;
         }
